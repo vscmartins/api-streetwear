@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URBAN KICKS // Streetwear & Sneaker Drip</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-brand">
+        <div class="brand-box">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <span class="brand-text">URBAN <span>KICKS</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#home" class="nav-link active"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="#produtos-section" class="nav-link"><i class="fa-solid fa-shoe-prints"></i> Produtos</a>
+        <button id="btn-open-cadastrar" class="nav-link-btn">
+          <i class="fa-solid fa-plus"></i> Cadastrar
+        </button>
+        <button id="btn-open-pedidos" class="nav-link-btn">
+          <i class="fa-solid fa-truck-fast"></i> Carrinho
+        </button>
+        <a href="#sobre-section" class="nav-link">Sobre</a>
+      </nav>
+
+      <div class="nav-actions">
+       
+        <div class="nav-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="nav-search-input" placeholder="Buscar tênis...">
+        </div>
+
+       
+        <button id="btn-cart-counter" class="action-icon-btn" title="Histórico de Pedidos">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span id="orders-badge-count" class="badge-count">0</span>
+        </button>
+
+        
+        <div class="user-profile-badge" title="Cliente ativo na sessão">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar" id="user-avatar-img">
+          <div class="user-info">
+            <span class="user-label">Login</span>
+            <select id="select-active-client" class="client-dropdown" aria-label="Selecione o cliente ativo">
+              <option value="">Carregando...</option>
+            </select>
+          </div>
+        </div>
+
+        
+        <button class="mobile-toggle" id="btn-mobile-toggle" aria-label="Menu Mobile">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <main>
+    <section id="home" class="hero-section">
+      <div class="hero-backdrop"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">ENCONTRE O SNEAKER PERFEITO PARA SEU ESTILO</h1>
+        <p class="hero-subtitle">Os melhores modelos urbanos e esportivos em um só lugar. Curadoria com autenticidade garantida e envio imediato.</p>
+        <div class="hero-buttons">
+          <a href="#produtos-section" class="btn btn-primary"><i class="fa-solid fa-fire"></i> COMPRAR AGORA</a>
+          <button id="hero-btn-cadastrar" class="btn btn-secondary"><i class="fa-solid fa-circle-plus"></i> CADASTRAR PRODUTO</button>
+        </div>
+      </div>
+      <div class="hero-card-preview">
+        <div class="preview-badge">LIMITADO</div>
+        <div class="preview-info">
+          <h4>Aero Pulse V2 "Cyber"</h4>
+          <span class="preview-price">R$ 1.599,90</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="produtos-section" class="catalog-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag"></span>
+          <h2 class="section-title">PRODUTOS EM DESTAQUE</h2>
+        </div>
+        <div class="catalog-toolbar">
+          <div class="filter-group">
+            <label for="filter-categoria"><i class="fa-solid fa-layer-group"></i> Categoria:</label>
+            <select id="filter-categoria" class="select-control">
+              <option value="">Todas as Categorias</option>
+              <option value="TENIS">Tênis</option>
+              <option value="MOLETOM">Moletom</option>
+              <option value="JAQUETA">Jaqueta</option>
+              <option value="BONE">Boné</option>
+              <option value="CAMISETA">Camiseta</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-marca"><i class="fa-solid fa-tag"></i> Marca:</label>
+            <select id="filter-marca" class="select-control">
+              <option value="">Todas as Marcas</option>
+            </select>
+          </div>
+
+          <button id="btn-reset-filters" class="btn btn-ghost" title="Limpar todos os filtros">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Limpar
+          </button>
+        </div>
+      </div>
+
+      <div id="loading-state" class="state-container hidden">
+        <div class="spinner-neon"></div>
+        <p class="state-text">Carregando catálogo da Urban Kicks...</p>
+      </div>
+
+      <div id="error-state" class="state-container hidden">
+        <div class="state-icon error"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3 class="state-title">Falha ao Conectar com a API</h3>
+        <p id="error-state-message" class="state-text">Certifique-se de que a aplicação Spring Boot está em execução.</p>
+        <button id="btn-retry-fetch" class="btn btn-primary"><i class="fa-solid fa-rotate-right"></i> Tentar Novamente</button>
+      </div>
+
+      <div id="empty-state" class="state-container hidden">
+        <div class="state-icon empty"><i class="fa-solid fa-box-open"></i></div>
+        <h3 class="state-title">Nenhum Tênis Encontrado</h3>
+        <p class="state-text">Nenhum item correspondeu aos filtros aplicados. Tente ajustar o termo de busca ou categoria.</p>
+        <button id="btn-empty-clear" class="btn btn-secondary">Ver Todo o Catálogo</button>
+      </div>
+
+      <div id="products-grid" class="products-grid">
+
+      </div>
+    </section>
+
+    <section class="styles-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag"></span>
+          <h2 class="section-title">CATEGORIAS DE TÊNIS</h2>
+        </div>
+      </div>
+
+      <div class="categories-grid">
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80" alt="Running">
+          <div class="cat-overlay">
+            <h3>RUNNING</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80" alt="Casual">
+          <div class="cat-overlay">
+            <h3>CASUAL</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&auto=format&fit=crop&q=80" alt="Streetwear">
+          <div class="cat-overlay">
+            <h3>STREETWEAR</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=600&auto=format&fit=crop&q=80" alt="Basquete">
+          <div class="cat-overlay">
+            <h3>BASQUETE</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80" alt="Skate">
+          <div class="cat-overlay">
+            <h3>SKATE</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+        <div class="category-card" data-cat="TENIS">
+          <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&auto=format&fit=crop&q=80" alt="Lifestyle">
+          <div class="cat-overlay">
+            <h3>LIFESTYLE</h3>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-bar">
+      <div class="feature-item">
+        <i class="fa-solid fa-truck"></i>
+        <div>
+          <h4>FRETE GRÁTIS</h4>
+          <p>Para todo o Brasil em compras acima de R$ 450,00</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fa-solid fa-bolt"></i>
+        <div>
+          <h4>ENTREGA RÁPIDA</h4>
+          <p>Envio expresso em até 24h úteis para capitais.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fa-solid fa-shield-halved"></i>
+        <div>
+          <h4>TROCA FACILITADA</h4>
+          <p>Primeira troca gratuita em até 30 dias após recebimento.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fa-solid fa-lock"></i>
+        <div>
+          <h4>COMPRA SEGURA</h4>
+          <p>Autenticidade garantida e pagamento 100% criptografado.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <div class="newsletter-card">
+        <span class="section-tag">ACESSO ANTECIPADO</span>
+        <h2>NÃO PERCA NENHUM DROP</h2>
+        <p>Cadastre-se para receber lançamentos exclusivos, reposições e convites para eventos Urban Kicks.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Inscrito com sucesso!');">
+          <input type="text" placeholder="Seu nome" required>
+          <input type="email" placeholder="Seu e-mail" required>
+          <button type="submit" class="btn btn-primary">RECEBER NOVIDADES</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="sobre-section" class="footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <div class="nav-brand">
+          <div class="brand-box"><i class="fa-solid fa-cube"></i></div>
+          <span class="brand-text">URBAN <span>KICKS</span></span>
+        </div>
+        <p>Curadoria premium de sneakers e streetwear para quem dita o ritmo das ruas. Plataforma oficial com controle integrado de estoque e entregas.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>LINKS RÁPIDOS</h4>
+        <ul>
+          <li><a href="#home">Início</a></li>
+          <li><a href="#produtos-section">Produtos</a></li>
+          <li><a href="javascript:void(0)" id="footer-btn-cadastrar">Cadastrar Tênis</a></li>
+          <li><a href="javascript:void(0)" id="footer-btn-pedidos">Meus Pedidos & Entregas</a></li>
+          <li><a href="/swagger-ui.html" target="_blank">Documentação Swagger (API)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>LEGAL</h4>
+        <ul>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos de Uso</a></li>
+          <li><a href="#">Trocas e Devoluções</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>REDES SOCIAIS</h4>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Urban Kicks. Todos os direitos reservados.</p>
+      <p>&copy;  Projeto Acadêmico.</p>
+    </div>
+  </footer>
+
+  <div id="modal-cadastrar" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-cadastrar-title">
+    <div class="modal-card modal-large">
+      <button class="modal-close" data-close-modal="modal-cadastrar" aria-label="Fechar">&times;</button>
+      
+      <div class="form-header">
+        <div class="form-header-badge">
+          <span class="pulsing-dot"></span> NOVO CADASTRO
+        </div>
+        <h2 id="modal-cadastrar-title" class="form-title">CADASTRAR NOVO TÊNIS</h2>
+        <p class="form-subtitle">Preencha as especificações fundamentais para adicionar uma nova silhueta ao catálogo oficial da Urban Kicks.</p>
+      </div>
+
+      <form id="form-cadastrar-produto" class="sneaker-form" novalidate>
+
+        <div class="form-group full-width">
+          <label for="cad-nome">Nome do Modelo <span class="required">*</span></label>
+          <input type="text" id="cad-nome" name="nome" placeholder="Ex: Air Jordan 1 Retro High" required maxlength="120">
+          <span class="field-hint">Ex: Air Jordan 1 Retro High, Yeezy Boost 350, Forum Low</span>
+        </div>
+
+     
+        <div class="form-group full-width">
+          <label for="cad-descricao">Descrição do Tênis <span class="required">*</span></label>
+          <textarea id="cad-descricao" name="descricao" rows="2" placeholder="Descreva os materiais, silhueta e inspiração..." required maxlength="500"></textarea>
+        </div>
+
+       
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cad-marca">Marca <span class="required">*</span></label>
+            <select id="cad-marca" name="marcaId" required>
+              <option value="">Selecione uma Marca</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cad-categoria">Tipo / Categoria <span class="required">*</span></label>
+            <select id="cad-categoria" name="categoria" required>
+              <option value="TENIS">Tênis</option>
+              <option value="MOLETOM">Moletom</option>
+              <option value="JAQUETA">Jaqueta</option>
+              <option value="BONE">Boné</option>
+              <option value="CAMISETA">Camiseta</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row three-cols">
+          <div class="form-group">
+            <label for="cad-tamanho">Tamanho <span class="required">*</span></label>
+            <select id="cad-tamanho" name="tamanho" required>
+              <option value="38 BR">38 BR</option>
+              <option value="39 BR">39 BR</option>
+              <option value="40 BR" selected>40 BR</option>
+              <option value="41 BR">41 BR</option>
+              <option value="42 BR">42 BR</option>
+              <option value="43 BR">43 BR</option>
+              <option value="44 BR">44 BR</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cad-quantidade">Quantidade em Estoque <span class="required">*</span></label>
+            <input type="number" id="cad-quantidade" name="quantidade" value="10" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cad-valor">Valor (R$) <span class="required">*</span></label>
+            <div class="input-currency-wrapper">
+              <span class="currency-prefix">R$</span>
+              <input type="number" id="cad-valor" name="preco" step="0.01" min="0.01" placeholder="899.90" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="cad-imagem">URL da Imagem <span class="required">*</span></label>
+          <div class="image-input-container">
+            <input type="url" id="cad-imagem" name="imagemUrl" placeholder="https://exemplo.com/sneaker.png" required>
+            <div class="image-preview-box" id="image-preview-container">
+              <img id="image-preview" src="" alt="Preview" class="hidden">
+              <span id="preview-placeholder"><i class="fa-solid fa-image"></i> PREVIEW</span>
+            </div>
+          </div>
+          <span class="field-hint">URL direta da foto (PNG, WEBP, JPG)</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="btn-cad-limpar" class="btn btn-secondary">Limpar Campos</button>
+          <button type="submit" id="btn-cad-salvar" class="btn btn-primary">
+            <i class="fa-solid fa-plus-circle"></i> CADASTRAR TÊNIS
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-comprar" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-comprar-title">
+    <div class="modal-card modal-medium">
+      <button class="modal-close" data-close-modal="modal-comprar" aria-label="Fechar">&times;</button>
+      
+      <div class="buy-modal-content">
+        <div class="buy-sneaker-view">
+          <img id="buy-sneaker-img" src="" alt="Sneaker Selecionado" class="buy-img">
+          <div class="buy-details">
+            <span id="buy-sneaker-brand" class="buy-brand">JORDAN</span>
+            <h3 id="buy-sneaker-name" class="buy-title">Air Jordan 1 Retro High</h3>
+            <p id="buy-sneaker-price" class="buy-price">R$ 899,90</p>
+          </div>
+        </div>
+
+        <hr class="modal-divider">
+
+        <form id="form-finalizar-compra" class="buy-form">
+          <input type="hidden" id="buy-produto-id">
+          
+
+          <div class="form-group">
+            <label for="buy-variacao-select"><i class="fa-solid fa-ruler-horizontal"></i> Selecione o Tamanho / SKU:</label>
+            <select id="buy-variacao-select" required>
+              <option value="">Carregando tamanhos disponíveis...</option>
+            </select>
+            <span id="buy-stock-info" class="field-hint stock-hint">Estoque: selecione um tamanho</span>
+          </div>
+
+          <div class="form-group">
+            <label for="buy-quantidade"><i class="fa-solid fa-hashtag"></i> Quantidade:</label>
+            <input type="number" id="buy-quantidade" min="1" max="10" value="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="buy-pagamento"><i class="fa-solid fa-credit-card"></i> Forma de Pagamento:</label>
+            <select id="buy-pagamento" required>
+              <option value="PIX">PIX (Aprovação Imediata)</option>
+              <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+              <option value="CARTAO_DEBITO">Cartão de Débito</option>
+              <option value="DINHEIRO">Dinheiro</option>
+            </select>
+          </div>
+
+          <div class="buyer-summary-box">
+            <div class="buyer-header">
+              <i class="fa-solid fa-user-check"></i>
+              <strong>Comprador Registrado:</strong>
+            </div>
+            <p id="buyer-summary-name" class="buyer-name">Marcus Vinicius Silva</p>
+            <span id="buyer-summary-email" class="buyer-email">marcus.silva@streetwear.com</span>
+          </div>
+
+    
+          <div class="total-bar">
+            <span>Total a Pagar:</span>
+            <strong id="buy-total-calc">R$ 899,90</strong>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close-modal="modal-comprar">Cancelar</button>
+            <button type="submit" id="btn-confirm-purchase" class="btn btn-primary">
+              <i class="fa-solid fa-check"></i> FINALIZAR COMPRA
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="modal-pedidos" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-pedidos-title">
+    <div class="modal-card modal-extra-large">
+      <button class="modal-close" data-close-modal="modal-pedidos" aria-label="Fechar">&times;</button>
+      
+      <div class="pedidos-header">
+        <div class="form-header-badge">
+          <span class="pulsing-dot"></span> CONTROLE TRANSACIONAL
+        </div>
+        <h2 id="modal-pedidos-title" class="form-title">HISTÓRICO DE PEDIDOS & ENTREGAS</h2>
+        <p class="form-subtitle">Visualize pedidos realizados, acompanhe o fluxo da entrega e gerencie o estoque em tempo real.</p>
+        
+        <div class="pedidos-filter-tabs">
+          <button class="tab-btn active" data-tab="todos">Todos os Pedidos</button>
+          <button class="tab-btn" data-tab="cliente">Do Cliente Conectado</button>
+        </div>
+      </div>
+
+      <div id="pedidos-loading" class="state-container hidden">
+        <div class="spinner-neon"></div>
+        <p class="state-text">Carregando pedidos...</p>
+      </div>
+
+      <div id="pedidos-empty" class="state-container hidden">
+        <div class="state-icon empty"><i class="fa-solid fa-receipt"></i></div>
+        <h3 class="state-title">Nenhum Pedido Registrado</h3>
+        <p class="state-text">Faça uma compra na vitrine para acompanhar a entrega e a baixa no estoque.</p>
+      </div>
+
+      <div class="orders-table-wrapper">
+        <table class="orders-table" id="orders-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Itens</th>
+              <th>Pagamento</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações de Entrega</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-confirm-delete" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-small">
+      <div class="delete-icon-box">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <h3 class="modal-small-title">Excluir Produto?</h3>
+      <p id="delete-prompt-text" class="modal-small-text">Tem certeza de que deseja remover este produto do mostruário?</p>
+      <div class="form-actions center">
+        <button type="button" class="btn btn-secondary" data-close-modal="modal-confirm-delete">Cancelar</button>
+        <button type="button" id="btn-confirm-delete-action" class="btn btn-danger">Sim, Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
