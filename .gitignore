@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .idea/
+src/test/java/com/dt2/streetwear/domain/service/ProdutoServiceTest.java
 
 ### STS ###
 .apt_generated
@@ -37,6 +38,8 @@ build/
 src/main/resources/application-local.properties
 !src/main/resources/application-local.properties.example
 
-
+.env
+.env.*
+!.env.example
 
 

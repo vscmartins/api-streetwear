@@ -1,0 +1,15 @@
+.git
+.idea/
+.vscode/
+target/
+docs/
+.postman/
+postman/
+resources.yaml
+*.log
+logs/
+.env
+.env.*
+src/main/resources/application-local.properties
+src/main/resources/application-*.local.properties
+HELP.md

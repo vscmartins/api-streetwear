@@ -2,7 +2,7 @@
 # NUNCA commite o arquivo application-local.properties com credenciais reais
 
 spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/streetwear_db}
-spring.datasource.username=${DB_USER:seu_usuario}
+spring.datasource.username=${DB_USERNAME:root}
 spring.datasource.password=${DB_PASSWORD:sua_senha}
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
